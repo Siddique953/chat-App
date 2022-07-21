@@ -1,10 +1,10 @@
-import 'package:chat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:story_view/story_view.dart';
 
 class ViewStatus extends StatefulWidget {
   final String id;
+
   ViewStatus({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -62,22 +62,21 @@ class _ViewStatusState extends State<ViewStatus> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StoryView(
-      onStoryShow: (s) {
-        print("Showing a story");
-        print(getList());
-      },
-      onComplete: () {
-        Navigator.pop(context);
-      },
-      onVerticalSwipeComplete: (direction) {
-        if (direction == Direction.down) {
-          Navigator.pop(context);
-        }
-      },
-      progressPosition: ProgressPosition.top,
-      repeat: false,
-      controller: storyController,
-      storyItems: [for (int i = 0; i < stories.length; i++) stories[i]],
-    ));
+          onStoryShow: (s) {
+            print("Showing a story");
+          },
+          onComplete: () {
+            Navigator.pop(context);
+          },
+          onVerticalSwipeComplete: (direction) {
+            if (direction == Direction.down) {
+              Navigator.pop(context);
+            }
+          },
+          progressPosition: ProgressPosition.top,
+          repeat: false,
+          controller: storyController,
+          storyItems: [for (int i = 0; i < stories.length; i++) stories[i]],
+        ));
   }
 }

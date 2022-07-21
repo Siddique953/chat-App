@@ -55,7 +55,7 @@ class _FirstPageState extends State<FirstPage> {
           ),
           body: SizedBox(
             height: MediaQuery.of(context).size.height,
-            child: TabBarView(children: [
+            child: const TabBarView(children: [
               PageCam(),
               NameList(),
               StatusPage(),
