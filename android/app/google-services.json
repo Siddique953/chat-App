@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "420382605879",
+    "project_id": "chat-app-87576",
+    "storage_bucket": "chat-app-87576.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420382605879:android:77a33cf4d6a2e0bc41f5b2",
+        "android_client_info": {
+          "package_name": "com.example.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420382605879-v29cqqm7ocsfh3mmv6fmpq6gr00tsrkm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAji99KJFX3IsH0BJzQAZF4i8plH_03HNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420382605879-v29cqqm7ocsfh3mmv6fmpq6gr00tsrkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420382605879:android:139da168dbf823db41f5b2",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420382605879-0ah4qe5o9rjl6lfri57m2d7d6sfgoosh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chat_app",
+            "certificate_hash": "cdefc4f06ee56464dec1fca9c627830e505f9504"
+          }
+        },
+        {
+          "client_id": "420382605879-v29cqqm7ocsfh3mmv6fmpq6gr00tsrkm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAji99KJFX3IsH0BJzQAZF4i8plH_03HNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420382605879-v29cqqm7ocsfh3mmv6fmpq6gr00tsrkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420382605879:android:df78273ddb28acdc41f5b2",
+        "android_client_info": {
+          "package_name": "com.example.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420382605879-v29cqqm7ocsfh3mmv6fmpq6gr00tsrkm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAji99KJFX3IsH0BJzQAZF4i8plH_03HNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420382605879-v29cqqm7ocsfh3mmv6fmpq6gr00tsrkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
