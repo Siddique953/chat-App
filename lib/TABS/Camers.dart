@@ -33,6 +33,7 @@ class _PageCamState extends State<PageCam> {
   @override
   void initState() {
     getList();
+    openCam();
     super.initState();
   }
 
@@ -83,7 +84,7 @@ class _PageCamState extends State<PageCam> {
                     ),
                     FloatingActionButton(
                       onPressed: () {
-                        uploadToStorage();
+                        // uploadToStorage();
                       },
                       backgroundColor: Colors.teal,
                       child: const Icon(Icons.send),
