@@ -40,9 +40,7 @@ class _StatusPageState extends State<StatusPage> {
 
   @override
   void initState() {
-    setState(() {
-      getList();
-    });
+    getList();
 
     super.initState();
   }
@@ -81,109 +79,80 @@ class _StatusPageState extends State<StatusPage> {
                             data[0]['status'][statlen! - 1]['sendTime'];
                         d = t.toDate();
                       }
-                      return statusList.isNotEmpty
-                          ? InkWell(
-                              onTap: () {
-                                Navigator.push(
+                      return InkWell(
+                          onTap: () {
+                            statusList.isNotEmpty
+                                ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ViewStatus(
                                         id: uId.toString(),
+                                        name: data![0]['SenderName'],
                                       ),
-                                    ));
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    StatusView(
-                                      radius: 30,
-                                      spacing: 15,
-                                      strokeWidth: 2,
-                                      indexOfSeenStatus: 0,
-                                      numberOfStatus: statlen,
-                                      padding: 4,
-                                      centerImageUrl: data![0]['status']
-                                          [statlen - 1]['url'],
-                                      seenColor: Colors.grey,
-                                      unSeenColor: Colors.teal,
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "My status",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17),
+                                    ))
+                                : pickFile(ImageSource.camera);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                statusList.isNotEmpty
+                                    ? StatusView(
+                                        radius: 30,
+                                        spacing: 15,
+                                        strokeWidth: 2,
+                                        indexOfSeenStatus: 0,
+                                        numberOfStatus: statlen,
+                                        padding: 4,
+                                        centerImageUrl: data![0]['status']
+                                            [statlen - 1]['url'],
+                                        seenColor: Colors.grey,
+                                        unSeenColor: Colors.teal,
+                                      )
+                                    : Badge(
+                                        toAnimate: false,
+                                        position: const BadgePosition(
+                                            bottom: 1, start: 30),
+                                        badgeColor: const Color(0xff168670),
+                                        badgeContent: const Icon(
+                                          Icons.add,
+                                          size: 13,
                                         ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          DateFormat('h:mm a')
+                                        child: CircleAvatar(
+                                          radius: 25,
+                                          backgroundImage:
+                                              CachedNetworkImageProvider(
+                                                  userData.photoURL),
+                                        ),
+                                      ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "My status",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 17),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      statusList.isNotEmpty
+                                          ? DateFormat('h:mm a')
                                               .format(d!)
-                                              .toLowerCase(),
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.grey[600],
-                                          ),
-                                        )
-                                      ],
+                                              .toLowerCase()
+                                          : 'Tap to add Status status',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey[600],
+                                      ),
                                     )
                                   ],
-                                ),
-                              ))
-                          : InkWell(
-                              onTap: () {
-                                pickFile(ImageSource.camera);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Badge(
-                                      toAnimate: false,
-                                      position: const BadgePosition(
-                                          bottom: 1, start: 30),
-                                      badgeColor: const Color(0xff168670),
-                                      badgeContent: const Icon(
-                                        Icons.add,
-                                        size: 13,
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 25,
-                                        backgroundImage:
-                                            CachedNetworkImageProvider(
-                                                userData.photoURL),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: const [
-                                        Text(
-                                          "My status",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "Tap a add status update",
-                                          style: TextStyle(
-                                              color: Colors.grey, fontSize: 14),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ));
+                                )
+                              ],
+                            ),
+                          ));
                     }),
                 const SizedBox(
                   height: 10,
@@ -217,49 +186,57 @@ class _StatusPageState extends State<StatusPage> {
                                       MaterialPageRoute(
                                         builder: (context) => ViewStatus(
                                           id: data[index]['senderId'],
+                                          name: data[index]['SenderName'],
                                         ),
                                       ));
                                 },
-                                child: Row(
-                                  children: [
-                                    StatusView(
-                                      radius: 30,
-                                      spacing: 15,
-                                      strokeWidth: 2,
-                                      indexOfSeenStatus: 0,
-                                      numberOfStatus: count,
-                                      padding: 4,
-                                      centerImageUrl: data[index]['status']
-                                          [count - 1]['url'],
-                                      seenColor: Colors.grey,
-                                      unSeenColor: Colors.teal,
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 10, top: 10, left: 8),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Row(
                                       children: [
-                                        Text(
-                                          data[index]['SenderName'],
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 17),
+                                        StatusView(
+                                          radius: 30,
+                                          spacing: 15,
+                                          strokeWidth: 2,
+                                          indexOfSeenStatus: 0,
+                                          numberOfStatus: count,
+                                          padding: 4,
+                                          centerImageUrl: data[index]['status']
+                                              [count - 1]['url'],
+                                          seenColor: Colors.grey,
+                                          unSeenColor: Colors.teal,
                                         ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          DateFormat('h:mm a')
-                                              .format(d!)
-                                              .toLowerCase(),
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.grey[600],
-                                          ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              data[index]['SenderName'],
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 17),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              DateFormat('h:mm a')
+                                                  .format(d!)
+                                                  .toLowerCase(),
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.grey[600],
+                                              ),
+                                            )
+                                          ],
                                         )
                                       ],
-                                    )
-                                  ],
+                                    ),
+                                  ),
                                 ),
                               );
                             }),
