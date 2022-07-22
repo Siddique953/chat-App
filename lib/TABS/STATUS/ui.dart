@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat/TABS/STATUS/Status.dart';
 import 'package:chat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:status_view/status_view.dart';
 
 class StatusPage extends StatefulWidget {
   const StatusPage({Key? key}) : super(key: key);
@@ -16,6 +19,8 @@ class StatusPage extends StatefulWidget {
 }
 
 class _StatusPageState extends State<StatusPage> {
+  DateTime? d;
+
   List statusList = [];
 
   final ImagePicker _picker = ImagePicker();
@@ -50,184 +55,218 @@ class _StatusPageState extends State<StatusPage> {
 
   @override
   Widget build(BuildContext context) {
-    var w = MediaQuery.of(context).size.width;
-    var h = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('status')
-                      .where('senderId', isEqualTo: uId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const CircularProgressIndicator();
-                    }
-                    var data = snapshot.data?.docs;
-                    int? statlen;
-                    if (statusList.isNotEmpty) {
-                      statlen = data![0]['status'].length - 1;
-                    }
-                    return statusList.isNotEmpty
-                        ? InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewStatus(
-                                      id: uId.toString(),
-                                    ),
-                                  ));
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage: NetworkImage(
-                                        data![0]['status'][statlen]['url']),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        "My status",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 17),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        "Tap a add status update",
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 14),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ))
-                        : InkWell(
-                            onTap: () {
-                              pickFile(ImageSource.camera);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Badge(
-                                    toAnimate: false,
-                                    position: const BadgePosition(
-                                        bottom: 1, start: 30),
-                                    badgeColor: const Color(0xff168670),
-                                    badgeContent: const Icon(
-                                      Icons.add,
-                                      size: 13,
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 25,
-                                      backgroundImage:
-                                          NetworkImage(userData.photoURL),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        "My status",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 17),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        "Tap a add status update",
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 14),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ));
-                  }),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text("Recent updates",
-                  style: TextStyle(color: Colors.grey, fontSize: 16)),
-              StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('status')
-                      .where("senderId", isNotEqualTo: uId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const CircularProgressIndicator();
-                    }
-                    var data = snapshot.data?.docs;
-                    return Expanded(
-                      child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: data!.length,
-                          itemBuilder: (context, index) {
-                            var statlen = data[index]['status'].length;
-                            return GestureDetector(
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('status')
+                        .where('senderId', isEqualTo: uId)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const CircularProgressIndicator();
+                      }
+                      var data = snapshot.data?.docs;
+                      var statlen;
+                      if (statusList.isNotEmpty) {
+                        statlen = data![0]['status'].length;
+                        Timestamp t =
+                            data[0]['status'][statlen! - 1]['sendTime'];
+                        d = t.toDate();
+                      }
+                      return statusList.isNotEmpty
+                          ? InkWell(
                               onTap: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ViewStatus(
-                                        id: data[index]['senderId'],
+                                        id: uId.toString(),
                                       ),
                                     ));
                               },
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage: NetworkImage(data[index]
-                                        ['status'][statlen - 1]['url']),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        data[index]['SenderName'],
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 17),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    StatusView(
+                                      radius: 30,
+                                      spacing: 15,
+                                      strokeWidth: 2,
+                                      indexOfSeenStatus: 0,
+                                      numberOfStatus: statlen,
+                                      padding: 4,
+                                      centerImageUrl: data![0]['status']
+                                          [statlen - 1]['url'],
+                                      seenColor: Colors.grey,
+                                      unSeenColor: Colors.teal,
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "My status",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          DateFormat('h:mm a')
+                                              .format(d!)
+                                              .toLowerCase(),
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey[600],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ))
+                          : InkWell(
+                              onTap: () {
+                                pickFile(ImageSource.camera);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Badge(
+                                      toAnimate: false,
+                                      position: const BadgePosition(
+                                          bottom: 1, start: 30),
+                                      badgeColor: const Color(0xff168670),
+                                      badgeContent: const Icon(
+                                        Icons.add,
+                                        size: 13,
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        "Tap a add status update",
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 14),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    );
-                  })
-            ],
+                                      child: CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
+                                                userData.photoURL),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: const [
+                                        Text(
+                                          "My status",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          "Tap a add status update",
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 14),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ));
+                    }),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text("Recent updates",
+                    style: TextStyle(color: Colors.grey, fontSize: 16)),
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('status')
+                        .where("senderId", isNotEqualTo: uId)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const CircularProgressIndicator();
+                      }
+                      var data = snapshot.data!.docs;
+                      return Expanded(
+                        child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              var count = data[index]['status'].length;
+
+                              Timestamp t =
+                                  data[index]['status'][count - 1]['sendTime'];
+                              d = t.toDate();
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ViewStatus(
+                                          id: data[index]['senderId'],
+                                        ),
+                                      ));
+                                },
+                                child: Row(
+                                  children: [
+                                    StatusView(
+                                      radius: 30,
+                                      spacing: 15,
+                                      strokeWidth: 2,
+                                      indexOfSeenStatus: 0,
+                                      numberOfStatus: count,
+                                      padding: 4,
+                                      centerImageUrl: data[index]['status']
+                                          [count - 1]['url'],
+                                      seenColor: Colors.grey,
+                                      unSeenColor: Colors.teal,
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          data[index]['SenderName'],
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          DateFormat('h:mm a')
+                                              .format(d!)
+                                              .toLowerCase(),
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey[600],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            }),
+                      );
+                    })
+              ],
+            ),
           ),
           Positioned(
             child: image == null

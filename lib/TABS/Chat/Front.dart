@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat/TABS/Chat/Chat.dart';
 import 'package:chat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,8 +52,8 @@ class _NameListState extends State<NameList> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(data[index]['userimage']),
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      data[index]['userimage']),
                                   radius: 35,
                                 ),
                               ),
