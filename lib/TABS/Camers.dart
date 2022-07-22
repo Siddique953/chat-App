@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
+import '../tabs.dart';
+import 'Chat/Front.dart';
+
 class PageCam extends StatefulWidget {
   const PageCam({Key? key}) : super(key: key);
 
@@ -33,7 +36,8 @@ class _PageCamState extends State<PageCam> {
   @override
   void initState() {
     getList();
-    openCam();
+    pickFile(ImageSource.camera);
+
     super.initState();
   }
 
@@ -126,14 +130,6 @@ class _PageCamState extends State<PageCam> {
       image = File(file.path);
       setState(() {});
     }
-  }
-
-//OPEN CAMERA TO TAKE PHOTO
-  openCam() async {
-    XFile? camImage = await _picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      image = File(camImage!.path);
-    });
   }
 
 //UPLOADING TO FIRESTORAGE AND FIRESTORE
