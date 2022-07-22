@@ -62,7 +62,31 @@ class _PageCamState extends State<PageCam> {
           image == null
               ? FloatingActionButton(
                   onPressed: () {
-                    openCam();
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('Alert'),
+                              content: const Text('Choose a option'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+
+                                      setState(() {
+                                        pickFile(ImageSource.camera);
+                                      });
+                                    },
+                                    child: const Text('Camera')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      setState(() {
+                                        pickFile(ImageSource.gallery);
+                                      });
+                                    },
+                                    child: const Text('Gallery'))
+                              ],
+                            ));
                   },
                   backgroundColor: Colors.teal,
                   child: const Icon(Icons.camera_alt_outlined),
@@ -96,10 +120,10 @@ class _PageCamState extends State<PageCam> {
     );
   }
 
-  void pickFile() async {
-    XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
+  pickFile(ImageSource filePath) async {
+    XFile? file = await _picker.pickImage(source: filePath);
     if (file != null) {
-      imagePath = file.path;
+      image = File(file.path);
       setState(() {});
     }
   }

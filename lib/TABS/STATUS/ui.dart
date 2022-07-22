@@ -118,7 +118,7 @@ class _StatusPageState extends State<StatusPage> {
                             ))
                         : InkWell(
                             onTap: () {
-                              openCam();
+                              pickFile(ImageSource.camera);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -246,7 +246,31 @@ class _StatusPageState extends State<StatusPage> {
           image == null
               ? FloatingActionButton(
                   onPressed: () {
-                    openCam();
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('Alert'),
+                              content: const Text('Choose a option'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+
+                                      setState(() {
+                                        pickFile(ImageSource.camera);
+                                      });
+                                    },
+                                    child: const Text('Camera')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      setState(() {
+                                        pickFile(ImageSource.gallery);
+                                      });
+                                    },
+                                    child: const Text('Gallery'))
+                              ],
+                            ));
                   },
                   backgroundColor: Colors.teal,
                   child: const Icon(Icons.camera_alt_outlined),
@@ -280,12 +304,13 @@ class _StatusPageState extends State<StatusPage> {
     );
   }
 
-  //OPEN CAMERA TO TAKE PHOTO
-  openCam() async {
-    XFile? camImage = await _picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      image = File(camImage!.path);
-    });
+  //OPEN iMAGE fILE
+  pickFile(ImageSource filePath) async {
+    XFile? file = await _picker.pickImage(source: filePath);
+    if (file != null) {
+      image = File(file.path);
+      setState(() {});
+    }
   }
 
 //UPLOADING TO FIRESTORAGE AND FIRESTORE
