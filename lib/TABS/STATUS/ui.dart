@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:status_view/status_view.dart';
+import 'package:video_player/video_player.dart';
 
 class StatusPage extends StatefulWidget {
   const StatusPage({Key? key}) : super(key: key);
@@ -22,11 +23,13 @@ class _StatusPageState extends State<StatusPage> {
   DateTime? d;
 
   List statusList = [];
-
+  VideoPlayerController? _controller;
   final ImagePicker _picker = ImagePicker();
   dynamic url;
   File? image;
   String? imagePath;
+  bool isVideo = false;
+  String? type;
 
   getList() {
     FirebaseFirestore.instance
@@ -87,7 +90,6 @@ class _StatusPageState extends State<StatusPage> {
                                     MaterialPageRoute(
                                       builder: (context) => ViewStatus(
                                         id: uId.toString(),
-                                        name: data![0]['SenderName'],
                                       ),
                                     ))
                                 : pickFile(ImageSource.camera);
@@ -186,14 +188,13 @@ class _StatusPageState extends State<StatusPage> {
                                       MaterialPageRoute(
                                         builder: (context) => ViewStatus(
                                           id: data[index]['senderId'],
-                                          name: data[index]['SenderName'],
                                         ),
                                       ));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       bottom: 10, top: 10, left: 8),
-                                  child: Container(
+                                  child: SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                     child: Row(
                                       children: [
@@ -248,11 +249,20 @@ class _StatusPageState extends State<StatusPage> {
           Positioned(
             child: image == null
                 ? const SizedBox()
-                : Image.file(
-                    image!,
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                  ),
+                : isVideo
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: VideoPlayer(_controller!))
+                    : SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Image.file(
+                          image!,
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                        ),
+                      ),
           ),
         ],
       ),
@@ -260,36 +270,76 @@ class _StatusPageState extends State<StatusPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           image == null
-              ? FloatingActionButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: const Text('Alert'),
-                              content: const Text('Choose a option'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
+              ? Column(
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        isVideo = true;
+                        type = 'video';
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: const Text('Alert'),
+                                  content: const Text('Choose a option'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
 
-                                      setState(() {
-                                        pickFile(ImageSource.camera);
-                                      });
-                                    },
-                                    child: const Text('Camera')),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      setState(() {
-                                        pickFile(ImageSource.gallery);
-                                      });
-                                    },
-                                    child: const Text('Gallery'))
-                              ],
-                            ));
-                  },
-                  backgroundColor: Colors.teal,
-                  child: const Icon(Icons.camera_alt_outlined),
+                                          setState(() {
+                                            pickFile(ImageSource.camera);
+                                          });
+                                        },
+                                        child: const Text('Camera')),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          setState(() {
+                                            pickFile(ImageSource.gallery);
+                                          });
+                                        },
+                                        child: const Text('Gallery'))
+                                  ],
+                                ));
+                      },
+                      backgroundColor: Colors.teal,
+                      child: const Icon(Icons.video_collection_outlined),
+                    ),
+                    const SizedBox(height: 5),
+                    FloatingActionButton(
+                      onPressed: () {
+                        isVideo = false;
+                        type = 'image';
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: const Text('Alert'),
+                                  content: const Text('Choose a option'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+
+                                          setState(() {
+                                            pickFile(ImageSource.camera);
+                                          });
+                                        },
+                                        child: const Text('Camera')),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          setState(() {
+                                            pickFile(ImageSource.gallery);
+                                          });
+                                        },
+                                        child: const Text('Gallery'))
+                                  ],
+                                ));
+                      },
+                      backgroundColor: Colors.teal,
+                      child: const Icon(Icons.camera_alt_outlined),
+                    )
+                  ],
                 )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -298,14 +348,33 @@ class _StatusPageState extends State<StatusPage> {
                       onPressed: () {
                         setState(() {
                           image = null;
+                          _controller = null;
                         });
                       },
                       backgroundColor: Colors.teal,
                       child: const Icon(Icons.delete_outline_outlined),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
+                    isVideo
+                        ? FloatingActionButton(
+                            onPressed: () {
+                              if (_controller!.value.isPlaying) {
+                                setState(() {
+                                  _controller?.pause();
+                                });
+                              } else {
+                                setState(() {
+                                  _controller?.play();
+                                });
+                              }
+                            },
+                            backgroundColor: Colors.teal,
+                            child: Icon(_controller!.value.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow),
+                          )
+                        : const SizedBox(),
+                    const SizedBox(width: 10),
                     FloatingActionButton(
                       onPressed: () {
                         uploadToStorage();
@@ -322,10 +391,23 @@ class _StatusPageState extends State<StatusPage> {
 
   //OPEN iMAGE fILE
   pickFile(ImageSource filePath) async {
-    XFile? file = await _picker.pickImage(source: filePath);
-    if (file != null) {
-      image = File(file.path);
-      setState(() {});
+    if (isVideo) {
+      XFile? file = await _picker.pickVideo(
+        source: filePath,
+      );
+      if (file != null) {
+        image = File(file.path);
+        setState(() {
+          _controller = VideoPlayerController.file(File(file.path));
+          _controller?.initialize();
+        });
+      }
+    } else {
+      XFile? file = await _picker.pickImage(source: filePath);
+      if (file != null) {
+        image = File(file.path);
+        setState(() {});
+      }
     }
   }
 
@@ -339,7 +421,7 @@ class _StatusPageState extends State<StatusPage> {
     uploadTask.then((res) async {
       url = (await ref.getDownloadURL()).toString();
       statusList.add({
-        'type': "image",
+        'type': type,
         'url': url,
         'sendTime': DateTime.now(),
       });
