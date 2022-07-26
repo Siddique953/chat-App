@@ -26,6 +26,8 @@ class _StatusPageState extends State<StatusPage> {
   VideoPlayerController? _controller;
   final ImagePicker _picker = ImagePicker();
   dynamic url;
+  dynamic vidUrl;
+  late String imageUrl;
   File? image;
   String? imagePath;
   bool isVideo = false;
@@ -272,7 +274,21 @@ class _StatusPageState extends State<StatusPage> {
           image == null
               ? Column(
                   children: [
+                    SizedBox(
+                      width: 45,
+                      child: FloatingActionButton(
+                        heroTag: 'Text',
+                        onPressed: () {
+                          isVideo = false;
+                          type = 'text';
+                        },
+                        backgroundColor: Colors.grey,
+                        child: const Icon(Icons.edit),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
                     FloatingActionButton(
+                      heroTag: 'video',
                       onPressed: () {
                         isVideo = true;
                         type = 'video';
@@ -307,6 +323,7 @@ class _StatusPageState extends State<StatusPage> {
                     ),
                     const SizedBox(height: 5),
                     FloatingActionButton(
+                      heroTag: 'camera',
                       onPressed: () {
                         isVideo = false;
                         type = 'image';
@@ -345,6 +362,7 @@ class _StatusPageState extends State<StatusPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FloatingActionButton(
+                      heroTag: 'clear',
                       onPressed: () {
                         setState(() {
                           image = null;
@@ -357,6 +375,7 @@ class _StatusPageState extends State<StatusPage> {
                     const SizedBox(width: 10),
                     isVideo
                         ? FloatingActionButton(
+                            heroTag: 'pause&play',
                             onPressed: () {
                               if (_controller!.value.isPlaying) {
                                 setState(() {
@@ -376,6 +395,7 @@ class _StatusPageState extends State<StatusPage> {
                         : const SizedBox(),
                     const SizedBox(width: 10),
                     FloatingActionButton(
+                      heroTag: 'send',
                       onPressed: () {
                         uploadToStorage();
                       },
@@ -403,7 +423,7 @@ class _StatusPageState extends State<StatusPage> {
         });
       }
     } else {
-      XFile? file = await _picker.pickImage(source: filePath);
+      XFile? file = await _picker.pickImage(source: filePath, imageQuality: 45);
       if (file != null) {
         image = File(file.path);
         setState(() {});
@@ -412,7 +432,7 @@ class _StatusPageState extends State<StatusPage> {
   }
 
 //UPLOADING TO FIRESTORAGE AND FIRESTORE
-  uploadToStorage() {
+  uploadToStorage() async {
     String fileName = DateTime.now().toString();
 
     var ref = FirebaseStorage.instance.ref().child('status/$fileName');
@@ -420,6 +440,7 @@ class _StatusPageState extends State<StatusPage> {
 
     uploadTask.then((res) async {
       url = (await ref.getDownloadURL()).toString();
+
       statusList.add({
         'type': type,
         'url': url,

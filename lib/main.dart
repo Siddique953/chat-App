@@ -1,7 +1,3 @@
-import 'package:chat/TABS/Camers.dart';
-import 'package:chat/TABS/STATUS/ui.dart';
-import 'package:chat/TABS/Test.dart';
-import 'package:chat/main.dart';
 import 'package:chat/tabs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

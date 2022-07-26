@@ -62,21 +62,21 @@ class _ViewStatusState extends State<ViewStatus> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StoryView(
-          onStoryShow: (s) {
-            print("Showing a story");
-          },
-          onComplete: () {
-            Navigator.pop(context);
-          },
-          onVerticalSwipeComplete: (direction) {
-            if (direction == Direction.down) {
-              Navigator.pop(context);
-            }
-          },
-          progressPosition: ProgressPosition.top,
-          repeat: false,
-          controller: storyController,
-          storyItems: [for (int i = 0; i < stories.length; i++) stories[i]],
-        ));
+      onStoryShow: (s) {
+        print("Showing a story");
+      },
+      onComplete: () {
+        Navigator.pop(context);
+      },
+      onVerticalSwipeComplete: (direction) {
+        if (direction == Direction.down) {
+          Navigator.pop(context);
+        }
+      },
+      progressPosition: ProgressPosition.top,
+      repeat: false,
+      controller: storyController,
+      storyItems: [for (int i = 0; i < stories.length; i++) stories[i]],
+    ));
   }
 }
