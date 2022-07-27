@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +108,7 @@ class _EmojiUiState extends State<EmojiUi> {
                     _onEmojiSelected(emoji);
                   },
                   onBackspacePressed: _onBackspacePressed,
-                  config: Config(
+                  config: const Config(
                       columns: 7,
                       // Issue: https://github.com/flutter/flutter/issues/28894
                       emojiSizeMax: 32 * 0.7,
@@ -117,7 +116,7 @@ class _EmojiUiState extends State<EmojiUi> {
                       horizontalSpacing: 0,
                       gridPadding: EdgeInsets.zero,
                       initCategory: Category.RECENT,
-                      bgColor: const Color(0xFFF2F2F2),
+                      bgColor: Color(0xFFF2F2F2),
                       indicatorColor: Colors.grey,
                       iconColor: Colors.grey,
                       iconColorSelected: Colors.black,
@@ -129,13 +128,13 @@ class _EmojiUiState extends State<EmojiUi> {
                       showRecentsTab: true,
                       recentsLimit: 30,
                       replaceEmojiOnLimitExceed: false,
-                      noRecents: const Text(
+                      noRecents: Text(
                         'No Recents',
                         style: TextStyle(fontSize: 20, color: Colors.black26),
                         textAlign: TextAlign.center,
                       ),
                       tabIndicatorAnimDuration: kTabScrollDuration,
-                      categoryIcons: const CategoryIcons(),
+                      categoryIcons: CategoryIcons(),
                       buttonMode: ButtonMode.MATERIAL)),
             ),
           ),

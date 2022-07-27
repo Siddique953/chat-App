@@ -12,6 +12,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:status_view/status_view.dart';
 import 'package:video_player/video_player.dart';
 
+import 'TextStatus.dart';
+
 class StatusPage extends StatefulWidget {
   const StatusPage({Key? key}) : super(key: key);
 
@@ -105,7 +107,7 @@ class _StatusPageState extends State<StatusPage> {
                                         radius: 30,
                                         spacing: 15,
                                         strokeWidth: 2,
-                                        indexOfSeenStatus: 0,
+                                        indexOfSeenStatus: statlen,
                                         numberOfStatus: statlen,
                                         padding: 4,
                                         centerImageUrl: data![0]['status']
@@ -244,7 +246,7 @@ class _StatusPageState extends State<StatusPage> {
                               );
                             }),
                       );
-                    })
+                    }),
               ],
             ),
           ),
@@ -281,6 +283,11 @@ class _StatusPageState extends State<StatusPage> {
                         onPressed: () {
                           isVideo = false;
                           type = 'text';
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TextPage(),
+                              ));
                         },
                         backgroundColor: Colors.grey,
                         child: const Icon(Icons.edit),
@@ -441,11 +448,8 @@ class _StatusPageState extends State<StatusPage> {
     uploadTask.then((res) async {
       url = (await ref.getDownloadURL()).toString();
 
-      statusList.add({
-        'type': type,
-        'url': url,
-        'sendTime': DateTime.now(),
-      });
+      statusList.add(
+          {'type': type, 'url': url, 'sendTime': DateTime.now(), 'viewed': []});
     }).then((value) =>
         FirebaseFirestore.instance.collection('status').doc(uId).set({
           'SenderName': userData.displayName,
