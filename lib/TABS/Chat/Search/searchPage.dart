@@ -83,34 +83,32 @@ class _SearchPageState extends State<SearchPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 27,
-                                          backgroundImage:
-                                              CachedNetworkImageProvider(
-                                                  snapshot.data!.docs[index]
-                                                      ['userimage']),
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              snapshot.data!.docs[index]
-                                                  ['username'],
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 27,
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(snapshot
+                                                .data!
+                                                .docs[index]['userimage']),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            snapshot.data!.docs[index]
+                                                ['username'],
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
                                   // Text(chatList[index]['time'],
                                   //     style: TextStyle(color: Color(0xff728088)))
@@ -146,34 +144,32 @@ class _SearchPageState extends State<SearchPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 27,
-                                          backgroundImage:
-                                              CachedNetworkImageProvider(
-                                                  snapshot.data!.docs[index]
-                                                      ['userimage']),
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              snapshot.data!.docs[index]
-                                                  ['username'],
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 27,
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(snapshot
+                                                .data!
+                                                .docs[index]['userimage']),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            snapshot.data!.docs[index]
+                                                ['username'],
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
                                   // Text(chatList[index]['time'],
                                   //     style: TextStyle(color: Color(0xff728088)))

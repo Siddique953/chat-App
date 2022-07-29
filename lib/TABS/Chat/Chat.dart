@@ -221,7 +221,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                                           ? Text(
                                                               msg[index]
                                                                   ["message"],
-                                                              style: TextStyle(
+                                                              style:
+                                                                  const TextStyle(
                                                                 fontSize: 16,
                                                                 color: Colors
                                                                     .black,
@@ -343,17 +344,17 @@ class _ChatScreenState extends State<ChatScreen> {
                                 fillColor: Colors.white,
                                 filled: true,
                                 hintText: 'Message',
-                                // suffixIcon: Row(
-                                //   children: [
-                                //     Transform.rotate(
-                                //         angle: 45,
-                                //         child: IconButton(
-                                //           icon:
-                                //               Icon(Icons.attach_file_outlined),
-                                //           onPressed: () {},
-                                //         ))
-                                //   ],
-                                // ),
+                                suffixIcon: Row(
+                                  children: [
+                                    Transform.rotate(
+                                        angle: 45,
+                                        child: IconButton(
+                                          icon:
+                                              Icon(Icons.attach_file_outlined),
+                                          onPressed: () {},
+                                        ))
+                                  ],
+                                ),
                                 contentPadding: const EdgeInsets.all(15),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30)),
@@ -367,6 +368,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               backgroundColor: Colors.teal,
                               onPressed: () {
                                 sendMessage();
+                                textData.clear();
                               },
                               child: const Icon(Icons.send),
                             ),
