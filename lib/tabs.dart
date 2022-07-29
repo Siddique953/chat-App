@@ -4,6 +4,8 @@ import 'package:chat/TABS/Chat/Front.dart';
 import 'package:chat/TABS/STATUS/ui.dart';
 import 'package:flutter/material.dart';
 
+import 'TABS/Chat/Search/searchPage.dart';
+
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
 
@@ -21,12 +23,21 @@ class _FirstPageState extends State<FirstPage> {
         initialIndex: 1,
         child: Scaffold(
           appBar: AppBar(
-            actions: const [
+            actions: [
               Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.search_rounded),
+                child: IconButton(
+                  icon: Icon(Icons.search_rounded),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SearchPage(),
+                        ));
+                  },
+                ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.more_vert_outlined),
               )
